@@ -19,7 +19,9 @@ class ServiceProxy
     method   = options[:method]
     headers  = { 'content-type' => 'text/xml; charset=utf-8', 'SOAPAction' => self.soap_actions[method] }
     body     = build_request(method, options)
-    response = self.service_http.request_post(self.service_uri.path, body, headers)    
+    req = Net::HTTP::Post.new(self.service_uri.path, headers)
+    setup_request!(req) if self.respond_to?(:setup_request!)
+    response = self.service_http.request(req, body)
     parse_response(method, response)
   end  
 

@@ -64,4 +64,11 @@ class InvalidSHAGeneratorService < ServiceProxy
     end
   end
   
+  def setup_request!(request)
+    # we could do something like:
+    #   req.basic_auth(@login, @password)
+    # 
+    # to have our calls use basic auth. This is
+    # just a stub for the specs though
+  end
 end

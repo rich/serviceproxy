@@ -96,4 +96,15 @@ describe ServiceProxy do
       @proxy.should respond_to(:isbn_service_soap_uri)
     end
   end
+  
+  describe "allowing the proxy to configure it's request" do
+    before do
+      @proxy = ISBNService.new('http://webservices.daehosting.com/services/isbnservice.wso?WSDL')
+    end
+    
+    it "should call #setup_request!" do
+      @proxy.should_receive(:setup_request!)
+      @proxy.IsValidISBN13(:isbn => '999-9999391939')
+    end
+  end
 end
