@@ -7,6 +7,8 @@ require 'uri'
 
 class ServiceProxy
   VERSION = '0.0.1'
+  WSDL_SCHEMA_URL = "http://schemas.xmlsoap.org/wsdl/"
+  SOAP_SCHEMA_URL = "http://schemas.xmlsoap.org/wsdl/soap/"
   
   attr_accessor :endpoint, :service_methods, :soap_actions, :service_uri, :http, :service_http, :uri, :debug, :wsdl, :target_namespace, :service_ports
 
@@ -91,7 +93,7 @@ private
   
   def parse_wsdl
     method_list = []    
-    self.wsdl.xpath('//*[name()="soap:operation"]').each do |operation|
+    self.wsdl.xpath('//soap:operation', {"xmlns:soap" => SOAP_SCHEMA_URL}).each do |operation|
       operation_name = operation.parent.get_attribute('name')
       method_list << operation_name
       self.soap_actions[operation_name] = operation.get_attribute('soapAction')
@@ -100,7 +102,7 @@ private
     self.service_methods = method_list.sort
     
     port_list = {}
-    self.wsdl.xpath('//wsdl:port', {"xmlns:wsdl" => 'http://schemas.xmlsoap.org/wsdl/'}).each do |port|
+    self.wsdl.xpath('//wsdl:port', {"xmlns:wsdl" => WSDL_SCHEMA_URL}).each do |port|
       name = underscore(port['name'])
       location = port.xpath('./*[@location]').first['location']
       port_list[name] = location
