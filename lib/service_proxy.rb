@@ -23,6 +23,15 @@ class ServiceProxy
     parse_response(method, response)
   end  
 
+  def respond_to?(key)
+    case key.to_s
+    when /_uri$/
+      true if self.service_ports.has_key?(key.to_s.gsub(/_uri$/, ''))
+    else
+      true if self.service_methods.include?(key.to_s)
+    end || super
+  end
+  
 protected
 
   def setup

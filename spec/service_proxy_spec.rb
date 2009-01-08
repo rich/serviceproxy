@@ -82,4 +82,18 @@ describe ServiceProxy do
       @proxy.send(:service_uri).path.should match(/\?dummy=1/)
     end
   end
+  
+  describe "using metaprogramming features" do
+    before do
+      @proxy = ISBNService.new('http://webservices.daehosting.com/services/isbnservice.wso?WSDL')
+    end
+    
+    it "should handle respond_to? properly for methods" do
+      @proxy.should respond_to(:IsValidISBN13)
+    end
+    
+    it "should handle respond_to? properly for service ports" do
+      @proxy.should respond_to(:isbn_service_soap_uri)
+    end
+  end
 end
